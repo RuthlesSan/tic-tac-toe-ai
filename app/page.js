@@ -140,6 +140,7 @@ export default function Home() {
     setRound(1);
   };
 
+  // START SCREEN
   if (!gameStarted) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
@@ -179,10 +180,15 @@ export default function Home() {
         >
           Start Game
         </button>
+
+        <p className="mt-6 text-gray-400 text-sm">
+          Game Developed By Sanjay and Team
+        </p>
       </div>
     );
   }
 
+  // GAME SCREEN
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
       <h1 className="text-3xl mb-2">Round {round}</h1>
@@ -218,13 +224,24 @@ export default function Home() {
       )}
 
       <div className="mt-4 flex gap-4">
-        <button onClick={nextRound} className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600">
+        <button 
+          onClick={nextRound} 
+          className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition"
+        >
           Next
         </button>
-        <button onClick={resetGame} className="bg-green-500 px-4 py-2 rounded hover:bg-green-600">
+
+        <button 
+          onClick={resetGame} 
+          className="bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition"
+        >
           Reset
         </button>
-        <button onClick={() => setGameStarted(false)} className="bg-red-500 px-4 py-2 rounded hover:bg-red-600">
+
+        <button 
+          onClick={() => setGameStarted(false)} 
+          className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition"
+        >
           Exit
         </button>
       </div>
