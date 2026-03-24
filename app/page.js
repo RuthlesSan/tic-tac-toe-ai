@@ -18,6 +18,7 @@ function checkWinner(board) {
   return board.includes(null) ? null : "Draw";
 }
 
+// HARD (Minimax)
 function minimax(board, isMaximizing) {
   const winner = checkWinner(board);
 
@@ -69,10 +70,36 @@ function bestMove(board) {
   return move;
 }
 
+// EASY
+function randomMove(board) {
+  const empty = board
+    .map((val, idx) => (val === null ? idx : null))
+    .filter((v) => v !== null);
+
+  return empty[Math.floor(Math.random() * empty.length)];
+}
+
+// MEDIUM
+function mediumMove(board) {
+  return Math.random() < 0.5 ? randomMove(board) : bestMove(board);
+}
+
 export default function Home() {
   const [board, setBoard] = useState(emptyBoard);
   const [gameStarted, setGameStarted] = useState(false);
   const [result, setResult] = useState(null);
+
+  const [difficulty, setDifficulty] = useState("hard");
+
+  const [playerScore, setPlayerScore] = useState(0);
+  const [aiScore, setAiScore] = useState(0);
+  const [round, setRound] = useState(1);
+
+  const getAIMove = (board) => {
+    if (difficulty === "easy") return randomMove(board);
+    if (difficulty === "medium") return mediumMove(board);
+    return bestMove(board);
+  };
 
   const handleClick = (index) => {
     if (board[index] || result) return;
@@ -81,33 +108,74 @@ export default function Home() {
     newBoard[index] = "X";
 
     let winner = checkWinner(newBoard);
-    if (winner) {
-      setBoard(newBoard);
-      setResult(winner);
-      return;
-    }
+    if (winner) return endRound(winner, newBoard);
 
-    let aiMove = bestMove(newBoard);
+    let aiMove = getAIMove(newBoard);
     newBoard[aiMove] = "O";
 
     winner = checkWinner(newBoard);
+    endRound(winner, newBoard);
+  };
 
+  const endRound = (winner, newBoard) => {
     setBoard(newBoard);
+
+    if (winner === "X") setPlayerScore((s) => s + 1);
+    if (winner === "O") setAiScore((s) => s + 1);
+
     if (winner) setResult(winner);
+  };
+
+  const nextRound = () => {
+    setBoard(emptyBoard);
+    setResult(null);
+    setRound((r) => r + 1);
   };
 
   const resetGame = () => {
     setBoard(emptyBoard);
     setResult(null);
+    setPlayerScore(0);
+    setAiScore(0);
+    setRound(1);
   };
 
   if (!gameStarted) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-        <h1 className="text-4xl mb-6">Tic Tac Toe AI</h1>
+        <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe AI</h1>
+
+        <div className="mb-4 text-center">
+          <p className="mb-2">Select Difficulty:</p>
+          <div className="flex gap-4 justify-center">
+
+            <button 
+              onClick={() => setDifficulty("easy")} 
+              className="bg-green-500 px-5 py-2 rounded hover:bg-green-700 transition duration-200"
+            >
+              Easy
+            </button>
+
+            <button 
+              onClick={() => setDifficulty("medium")} 
+              className="bg-yellow-500 px-5 py-2 rounded hover:bg-yellow-600 transition duration-200"
+            >
+              Medium
+            </button>
+
+            <button 
+              onClick={() => setDifficulty("hard")} 
+              className="bg-red-500 px-5 py-2 rounded hover:bg-red-600 transition duration-200"
+            >
+              Hard
+            </button>
+
+          </div>
+        </div>
+
         <button
           onClick={() => setGameStarted(true)}
-          className="px-6 py-3 bg-blue-500 rounded-xl"
+          className="px-8 py-3 bg-blue-500 rounded-xl hover:bg-blue-600 transition duration-200"
         >
           Start Game
         </button>
@@ -117,14 +185,22 @@ export default function Home() {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-      <h1 className="text-3xl mb-4">Tic Tac Toe</h1>
+      <h1 className="text-3xl mb-2">Round {round}</h1>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div className="mb-2">
+        Difficulty: <span className="uppercase">{difficulty}</span>
+      </div>
+
+      <div className="mb-4">
+        You: {playerScore} | AI: {aiScore}
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
         {board.map((cell, i) => (
           <div
             key={i}
             onClick={() => handleClick(i)}
-            className="w-20 h-20 flex items-center justify-center bg-gray-800 text-2xl cursor-pointer"
+            className="w-24 h-24 flex items-center justify-center bg-gray-800 text-3xl cursor-pointer hover:bg-gray-700 rounded-lg"
           >
             {cell}
           </div>
@@ -134,25 +210,21 @@ export default function Home() {
       {result && (
         <div className="mt-4 text-xl">
           {result === "Draw"
-            ? "It's a Draw 🤝"
+            ? "Draw 🤝"
             : result === "X"
             ? "You Win 🎉"
-            : "Computer Wins 🤖"}
+            : "AI Wins 🤖"}
         </div>
       )}
 
       <div className="mt-4 flex gap-4">
-        <button
-          onClick={resetGame}
-          className="px-4 py-2 bg-green-500 rounded"
-        >
-          Restart
+        <button onClick={nextRound} className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600">
+          Next
         </button>
-
-        <button
-          onClick={() => setGameStarted(false)}
-          className="px-4 py-2 bg-red-500 rounded"
-        >
+        <button onClick={resetGame} className="bg-green-500 px-4 py-2 rounded hover:bg-green-600">
+          Reset
+        </button>
+        <button onClick={() => setGameStarted(false)} className="bg-red-500 px-4 py-2 rounded hover:bg-red-600">
           Exit
         </button>
       </div>
