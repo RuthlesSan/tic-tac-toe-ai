@@ -145,10 +145,14 @@ export default function Home() {
   if (!gameStarted) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-        <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe AI</h1>
+        <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe</h1>
 
         <div className="mb-4 text-center">
-          <p className="mb-2">Select Difficulty:</p>
+          <p className="mb-2 text-lg">
+            {difficulty
+              ? `Difficulty: ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`
+              : "Select Difficulty:"}
+          </p>
           <div className="flex gap-4 justify-center">
 
             <button
