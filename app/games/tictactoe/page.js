@@ -13,11 +13,16 @@ function checkWinner(board) {
 
   for (let [a,b,c] of wins) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return board[a];
+      return board[a]; // X or O
     }
   }
 
-  return board.includes(null) ? "Draw" : null;
+  // ✅ Correct logic
+  if (!board.includes(null)) {
+    return "Draw";
+  }
+
+  return null;
 }
 
 // MINIMAX
