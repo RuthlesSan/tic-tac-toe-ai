@@ -48,9 +48,8 @@ export default function Home() {
 
       {/* 🎮 Grid */}
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 transition-all duration-700 ${
-          loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
+        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 transition-all duration-700 ${loaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
       >
         {games.map((game, i) => (
           <div
@@ -66,7 +65,7 @@ export default function Home() {
             />
 
             {/* Name */}
-            <div className="p-4 text-center text-lg font-semibold">
+            <div className="py-2 text-center text-base font-medium">
               {game.name}
             </div>
           </div>
