@@ -14,7 +14,8 @@ function checkWinner(board) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
       return board[a];
     }
-  
+  }
+
   return board.includes(null) ? null : "Draw";
 }
 
