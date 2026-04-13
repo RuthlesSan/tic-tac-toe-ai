@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
       <h1 className="text-5xl mb-10 font-bold">
-        Minimax AI Games Hub
+        Minimax AI Games Arena
       </h1>
 
       <div className="grid grid-cols-2 gap-6">
