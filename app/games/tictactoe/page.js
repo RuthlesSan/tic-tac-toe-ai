@@ -13,14 +13,11 @@ function checkWinner(board) {
 
   for (let [a,b,c] of wins) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return board[a]; // X or O
+      return board[a];
     }
   }
 
-  // ✅ Correct logic
-  if (!board.includes(null)) {
-    return "Draw";
-  }
+  if (!board.includes(null)) return "Draw";
 
   return null;
 }
@@ -101,26 +98,12 @@ export default function Home() {
   const [aiScore, setAiScore] = useState(0);
   const [round, setRound] = useState(1);
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
+  const [matchWinner, setMatchWinner] = useState(null);
 
-  // 🏆 First to 3 points
+  // 🏆 First to 3
   useEffect(() => {
-    if (playerScore === 3) {
-      setTimeout(() => {
-        alert("🎉 Player Wins the Match!");
-        resetGame();
-        router.push("/games/tictactoe");
-      }, 500);
-    }
-
-    if (aiScore === 3) {
-      setTimeout(() => {
-        alert("🤖 AI Wins the Match!");
-        resetGame();
-        router.push("/games/tictactoe");
-      }, 500);
-    }
+    if (playerScore === 3) setMatchWinner("player");
+    if (aiScore === 3) setMatchWinner("ai");
   }, [playerScore, aiScore]);
 
   const getAIMove = (board) => {
@@ -130,7 +113,7 @@ export default function Home() {
   };
 
   const handleClick = (index) => {
-    if (board[index] || result) return;
+    if (board[index] || result || matchWinner) return;
 
     let newBoard = [...board];
     newBoard[index] = "X";
@@ -148,22 +131,8 @@ export default function Home() {
   const endRound = (winner, newBoard) => {
     setBoard(newBoard);
 
-    if (winner === "X") {
-      setPlayerScore((s) => s + 1);
-      setPopupMessage("🎉 You Win!");
-      setShowPopup(true);
-    }
-
-    if (winner === "O") {
-      setAiScore((s) => s + 1);
-      setPopupMessage("🤖 AI Wins!");
-      setShowPopup(true);
-    }
-
-    if (winner === "Draw") {
-      setPopupMessage("🤝 Draw!");
-      setShowPopup(true);
-    }
+    if (winner === "X") setPlayerScore((s) => s + 1);
+    if (winner === "O") setAiScore((s) => s + 1);
 
     if (winner) setResult(winner);
   };
@@ -180,6 +149,7 @@ export default function Home() {
     setPlayerScore(0);
     setAiScore(0);
     setRound(1);
+    setMatchWinner(null);
   };
 
   // START SCREEN
@@ -252,17 +222,11 @@ export default function Home() {
       </div>
 
       <div className="mt-4 flex gap-4">
-        <button
-          onClick={nextRound}
-          className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600"
-        >
+        <button onClick={nextRound} className="bg-yellow-500 px-4 py-2 rounded">
           Next
         </button>
 
-        <button
-          onClick={resetGame}
-          className="bg-green-500 px-4 py-2 rounded hover:bg-green-600"
-        >
+        <button onClick={resetGame} className="bg-green-500 px-4 py-2 rounded">
           Reset
         </button>
 
@@ -271,26 +235,37 @@ export default function Home() {
             resetGame();
             setGameStarted(false);
           }}
-          className="bg-red-500 px-4 py-2 rounded hover:bg-red-600"
+          className="bg-red-500 px-4 py-2 rounded"
         >
           Exit
         </button>
       </div>
 
-      {/* POPUP */}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
-          <div className="bg-gray-900 p-8 rounded-xl text-center">
-            <h2 className="text-2xl mb-4">{popupMessage}</h2>
+      {/* 🏆 MATCH RESULT */}
+      {matchWinner && (
+        <div className="mt-8 bg-gray-900 p-6 rounded-xl text-center shadow-lg">
+          <h2 className="text-2xl mb-4">
+            {matchWinner === "player"
+              ? "🎉 You Won the Match!"
+              : "🤖 AI Won the Match!"}
+          </h2>
+
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={resetGame}
+              className="bg-green-500 px-5 py-2 rounded"
+            >
+              Restart
+            </button>
 
             <button
               onClick={() => {
-                setShowPopup(false);
-                nextRound();
+                resetGame();
+                setGameStarted(false);
               }}
-              className="bg-blue-500 px-6 py-2 rounded hover:bg-blue-600"
+              className="bg-blue-500 px-5 py-2 rounded"
             >
-              Continue
+              Go Back
             </button>
           </div>
         </div>
