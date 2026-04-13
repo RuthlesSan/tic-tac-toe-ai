@@ -65,7 +65,7 @@ export default function Home() {
             />
 
             {/* Name */}
-            <div className="py-2 text-center text-base font-medium">
+            <div className="py-2 text-center text-base font-bold text-white tracking-wide">
               {game.name}
             </div>
           </div>
