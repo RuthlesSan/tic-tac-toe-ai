@@ -5,14 +5,14 @@ const emptyBoard = Array(9).fill(null);
 
 function checkWinner(board) {
   const wins = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6],
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6],
   ];
 
-  for (let [a,b,c] of wins) {
+  for (let [a, b, c] of wins) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return { winner: board[a], line: [a,b,c] };
+      return { winner: board[a], line: [a, b, c] };
     }
   }
 
@@ -204,10 +204,18 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 mb-6">
-          {["easy","medium","hard"].map(level => (
-            <button key={level}
+          {["easy", "medium", "hard"].map(level => (
+            <button
+              key={level}
               onClick={() => setDifficulty(level)}
-              className="px-4 py-2 rounded bg-blue-500"
+              className={`px-5 py-2 rounded transition ${difficulty === level
+                  ? "bg-blue-600 scale-105"
+                  : level === "easy"
+                    ? "bg-green-500 hover:bg-green-600"
+                    : level === "medium"
+                      ? "bg-yellow-500 hover:bg-yellow-600"
+                      : "bg-red-500 hover:bg-red-600"
+                }`}
             >
               {level}
             </button>
