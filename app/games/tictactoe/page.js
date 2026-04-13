@@ -1,25 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const emptyBoard = Array(9).fill(null);
 
 function checkWinner(board) {
   const wins = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6],
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6],
   ];
 
-  for (let [a, b, c] of wins) {
+  for (let [a,b,c] of wins) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
       return board[a];
     }
   }
 
-  return board.includes(null) ? null : "Draw";
+  return board.includes(null) ? "Draw" : null;
 }
 
-// HARD (Minimax)
+// MINIMAX
 function minimax(board, isMaximizing) {
   const winner = checkWinner(board);
 
@@ -71,7 +72,6 @@ function bestMove(board) {
   return move;
 }
 
-// EASY
 function randomMove(board) {
   const empty = board
     .map((val, idx) => (val === null ? idx : null))
@@ -80,21 +80,43 @@ function randomMove(board) {
   return empty[Math.floor(Math.random() * empty.length)];
 }
 
-// MEDIUM
 function mediumMove(board) {
   return Math.random() < 0.5 ? randomMove(board) : bestMove(board);
 }
 
 export default function Home() {
+  const router = useRouter();
+
   const [board, setBoard] = useState(emptyBoard);
   const [gameStarted, setGameStarted] = useState(false);
   const [result, setResult] = useState(null);
-
-  const [difficulty, setDifficulty] = useState("hard");
+  const [difficulty, setDifficulty] = useState(null);
 
   const [playerScore, setPlayerScore] = useState(0);
   const [aiScore, setAiScore] = useState(0);
   const [round, setRound] = useState(1);
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
+  // 🏆 First to 3 points
+  useEffect(() => {
+    if (playerScore === 3) {
+      setTimeout(() => {
+        alert("🎉 Player Wins the Match!");
+        resetGame();
+        router.push("/games/tictactoe");
+      }, 500);
+    }
+
+    if (aiScore === 3) {
+      setTimeout(() => {
+        alert("🤖 AI Wins the Match!");
+        resetGame();
+        router.push("/games/tictactoe");
+      }, 500);
+    }
+  }, [playerScore, aiScore]);
 
   const getAIMove = (board) => {
     if (difficulty === "easy") return randomMove(board);
@@ -121,8 +143,22 @@ export default function Home() {
   const endRound = (winner, newBoard) => {
     setBoard(newBoard);
 
-    if (winner === "X") setPlayerScore((s) => s + 1);
-    if (winner === "O") setAiScore((s) => s + 1);
+    if (winner === "X") {
+      setPlayerScore((s) => s + 1);
+      setPopupMessage("🎉 You Win!");
+      setShowPopup(true);
+    }
+
+    if (winner === "O") {
+      setAiScore((s) => s + 1);
+      setPopupMessage("🤖 AI Wins!");
+      setShowPopup(true);
+    }
+
+    if (winner === "Draw") {
+      setPopupMessage("🤝 Draw!");
+      setShowPopup(true);
+    }
 
     if (winner) setResult(winner);
   };
@@ -145,50 +181,42 @@ export default function Home() {
   if (!gameStarted) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-        <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe</h1>
+        <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe AI</h1>
 
         <div className="mb-4 text-center">
-          <p className="mb-2 text-lg">
+          <p className="mb-2 text-lg font-semibold">
             {difficulty
-              ? `Difficulty: ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}`
+              ? `Difficulty: ${difficulty.toUpperCase()}`
               : "Select Difficulty:"}
           </p>
+
           <div className="flex gap-4 justify-center">
-
-            <button
-              onClick={() => setDifficulty("easy")}
-              className="bg-green-500 px-5 py-2 rounded hover:bg-green-700 transition duration-200"
-            >
-              Easy
-            </button>
-
-            <button
-              onClick={() => setDifficulty("medium")}
-              className="bg-yellow-500 px-5 py-2 rounded hover:bg-yellow-600 transition duration-200"
-            >
-              Medium
-            </button>
-
-            <button
-              onClick={() => setDifficulty("hard")}
-              className="bg-red-500 px-5 py-2 rounded hover:bg-red-600 transition duration-200"
-            >
-              Hard
-            </button>
-
+            {["easy", "medium", "hard"].map((level) => (
+              <button
+                key={level}
+                onClick={() => setDifficulty(level)}
+                className={`px-5 py-2 rounded transition ${
+                  difficulty === level
+                    ? "bg-blue-600 scale-105"
+                    : level === "easy"
+                    ? "bg-green-500"
+                    : level === "medium"
+                    ? "bg-yellow-500"
+                    : "bg-red-500"
+                }`}
+              >
+                {level.charAt(0).toUpperCase() + level.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
 
         <button
           onClick={() => setGameStarted(true)}
-          className="px-8 py-3 bg-blue-500 rounded-xl hover:bg-blue-600 transition duration-200"
+          className="px-8 py-3 bg-blue-500 rounded-xl hover:bg-blue-600 transition"
         >
           Start Game
         </button>
-
-        <p className="mt-6 text-gray-400 text-sm">
-          Game Developed By Sanjay and Team
-        </p>
       </div>
     );
   }
@@ -218,38 +246,50 @@ export default function Home() {
         ))}
       </div>
 
-      {result && (
-        <div className="mt-4 text-xl">
-          {result === "Draw"
-            ? "Draw 🤝"
-            : result === "X"
-              ? "You Win 🎉"
-              : "AI Wins 🤖"}
-        </div>
-      )}
-
       <div className="mt-4 flex gap-4">
         <button
           onClick={nextRound}
-          className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition"
+          className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600"
         >
           Next
         </button>
 
         <button
           onClick={resetGame}
-          className="bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition"
+          className="bg-green-500 px-4 py-2 rounded hover:bg-green-600"
         >
           Reset
         </button>
 
         <button
-          onClick={() => setGameStarted(false)}
-          className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition"
+          onClick={() => {
+            resetGame();
+            setGameStarted(false);
+          }}
+          className="bg-red-500 px-4 py-2 rounded hover:bg-red-600"
         >
           Exit
         </button>
       </div>
+
+      {/* POPUP */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-gray-900 p-8 rounded-xl text-center">
+            <h2 className="text-2xl mb-4">{popupMessage}</h2>
+
+            <button
+              onClick={() => {
+                setShowPopup(false);
+                nextRound();
+              }}
+              className="bg-blue-500 px-6 py-2 rounded hover:bg-blue-600"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
