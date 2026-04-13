@@ -206,9 +206,9 @@ export default function Home() {
         <div className="flex gap-4 mb-6">
           {["easy", "medium", "hard"].map(level => (
             <button
-              key={level}
+              key={level.toUpperCase()}
               onClick={() => setDifficulty(level)}
-              className={`px-5 py-2 rounded transition ${difficulty === level
+              className={`px-5 py-2 rounded font-bold uppercase tracking-wide transition ${difficulty === level
                   ? "bg-blue-600 scale-105"
                   : level === "easy"
                     ? "bg-green-500 hover:bg-green-600"
@@ -217,7 +217,7 @@ export default function Home() {
                       : "bg-red-500 hover:bg-red-600"
                 }`}
             >
-              {level}
+              {level.toUpperCase()}
             </button>
           ))}
         </div>
