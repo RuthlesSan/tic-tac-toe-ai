@@ -5,12 +5,12 @@ const emptyBoard = Array(9).fill(null);
 
 function checkWinner(board) {
   const wins = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6],
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6],
   ];
 
-  for (let [a,b,c] of wins) {
+  for (let [a, b, c] of wins) {
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
       return board[a];
     }
@@ -151,22 +151,22 @@ export default function Home() {
           <p className="mb-2">Select Difficulty:</p>
           <div className="flex gap-4 justify-center">
 
-            <button 
-              onClick={() => setDifficulty("easy")} 
+            <button
+              onClick={() => setDifficulty("easy")}
               className="bg-green-500 px-5 py-2 rounded hover:bg-green-700 transition duration-200"
             >
               Easy
             </button>
 
-            <button 
-              onClick={() => setDifficulty("medium")} 
+            <button
+              onClick={() => setDifficulty("medium")}
               className="bg-yellow-500 px-5 py-2 rounded hover:bg-yellow-600 transition duration-200"
             >
               Medium
             </button>
 
-            <button 
-              onClick={() => setDifficulty("hard")} 
+            <button
+              onClick={() => setDifficulty("hard")}
               className="bg-red-500 px-5 py-2 rounded hover:bg-red-600 transition duration-200"
             >
               Hard
@@ -219,28 +219,28 @@ export default function Home() {
           {result === "Draw"
             ? "Draw 🤝"
             : result === "X"
-            ? "You Win 🎉"
-            : "AI Wins 🤖"}
+              ? "You Win 🎉"
+              : "AI Wins 🤖"}
         </div>
       )}
 
       <div className="mt-4 flex gap-4">
-        <button 
-          onClick={nextRound} 
+        <button
+          onClick={nextRound}
           className="bg-yellow-500 px-4 py-2 rounded hover:bg-yellow-600 transition"
         >
           Next
         </button>
 
-        <button 
-          onClick={resetGame} 
+        <button
+          onClick={resetGame}
           className="bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition"
         >
           Reset
         </button>
 
-        <button 
-          onClick={() => setGameStarted(false)} 
+        <button
+          onClick={() => setGameStarted(false)}
           className="bg-red-500 px-4 py-2 rounded hover:bg-red-600 transition"
         >
           Exit
