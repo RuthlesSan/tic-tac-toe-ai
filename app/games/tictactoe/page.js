@@ -204,23 +204,24 @@ export default function Home() {
         </p>
 
         <div className="flex gap-4 mb-6">
-          {["easy", "medium", "hard"].map(level => (
-            <button
-              key={level.toUpperCase()}
-              onClick={() => setDifficulty(level)}
-              className={`px-5 py-2 rounded font-bold uppercase tracking-wide transition ${difficulty === level
-                  ? "bg-blue-600 scale-105"
-                  : level === "easy"
-                    ? "bg-green-500 hover:bg-green-600"
-                    : level === "medium"
-                      ? "bg-yellow-500 hover:bg-yellow-600"
-                      : "bg-red-500 hover:bg-red-600"
-                }`}
-            >
-              {level.toUpperCase()}
-            </button>
-          ))}
-        </div>
+  {["easy", "medium", "hard"].map(level => (
+    <button
+      key={level}
+      onClick={() => setDifficulty(level)}
+      className={`px-5 py-2 rounded font-bold tracking-wide transition ${
+        difficulty === level
+          ? "bg-blue-600 scale-105"
+          : level === "easy"
+          ? "bg-green-500 hover:bg-green-600"
+          : level === "medium"
+          ? "bg-yellow-500 hover:bg-yellow-600"
+          : "bg-red-500 hover:bg-red-600"
+      }`}
+    >
+      {level.charAt(0).toUpperCase() + level.slice(1)}
+    </button>
+  ))}
+</div>
 
         <button
           onClick={() => setGameStarted(true)}
