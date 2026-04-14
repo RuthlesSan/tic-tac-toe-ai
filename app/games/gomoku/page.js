@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 const SIZE = 10;
 
@@ -23,12 +24,21 @@ export default function Gomoku() {
     const [winningLine, setWinningLine] = useState([]);
     const [hoverCell, setHoverCell] = useState(null);
 
-    const clickSound = typeof Audio !== "undefined" ? new Audio("/click.mp3") : null;
-    const winSound = typeof Audio !== "undefined" ? new Audio("/win.mp3") : null;
-    const loseSound = typeof Audio !== "undefined" ? new Audio("/lose.mp3") : null;
+    const clickSound = useRef(null);
+    const winSound = useRef(null);
+    const loseSound = useRef(null);
+    useEffect(() => {
+        clickSound.current = new Audio("/click.mp3");
+        winSound.current = new Audio("/win.mp3");
+        loseSound.current = new Audio("/lose.mp3");
+    }, []);
 
     const play = (s) => { if (!s) return; s.currentTime = 0; s.play(); };
-
+    const play = (soundRef) => {
+        if (!soundRef.current) return;
+        soundRef.current.currentTime = 0;
+        soundRef.current.play();
+    };
     // 🔥 CHECK WIN
     const checkWin = (b, r, c, player) => {
         for (let [dr, dc] of directions) {
