@@ -245,8 +245,11 @@ export default function Othello() {
 
     // 🎮 START SCREEN
     const validMoves = getValidMoves(board, "B");
-    if (!gameStarted) {
 
+    const flat = board.flat();
+    const blackCount = flat.filter(x => x === "B").length;
+    const whiteCount = flat.filter(x => x === "W").length;
+    if (!gameStarted) {
         return (
             <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
                 <h1 className="text-5xl mb-6 font-bold">Othello</h1>
@@ -294,6 +297,9 @@ export default function Othello() {
             <p className="mb-4">
                 Difficulty: <span className="uppercase font-semibold">{difficulty}</span>
             </p>
+            <p className="mb-2">
+                ⚫ {blackCount} | ⚪ {whiteCount}
+            </p>
 
             <div className="grid grid-cols-8 gap-1 bg-green-800 p-2 rounded-xl">
                 {board.map((row, r) =>
@@ -333,20 +339,33 @@ export default function Othello() {
 
             {winner && (
                 <div className="mt-6 bg-gray-900 p-6 rounded-xl text-center">
-                    <h2 className="text-xl mb-4">
+                    <h2 className="text-xl mb-2">
                         {winner === "draw"
                             ? "🤝 Draw!"
                             : winner === "player"
-                                ? "🎉 You Win!"
-                                : "🤖 AI Wins!"}
+                                ? "🎉 You Won the Match!"
+                                : "🤖 AI Won the Match!"}
                     </h2>
 
+                    <p className="mb-4">
+                        ⚫ {blackCount} vs ⚪ {whiteCount}
+                    </p>
+
                     <div className="flex gap-4 justify-center">
-                        <button onClick={resetGame} className="bg-green-500 px-4 py-2 rounded">
+                        <button
+                            onClick={resetGame}
+                            className="bg-green-500 px-4 py-2 rounded"
+                        >
                             Restart
                         </button>
-                        <button onClick={() => { resetGame(); setGameStarted(false); }}
-                            className="bg-red-500 px-4 py-2 rounded">
+
+                        <button
+                            onClick={() => {
+                                resetGame();
+                                setGameStarted(false);
+                            }}
+                            className="bg-red-500 px-4 py-2 rounded"
+                        >
                             Exit
                         </button>
                     </div>
