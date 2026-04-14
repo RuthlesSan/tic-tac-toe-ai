@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const SIZE = 10;
 
@@ -31,9 +30,12 @@ export default function Gomoku() {
         clickSound.current = new Audio("/click.mp3");
         winSound.current = new Audio("/win.mp3");
         loseSound.current = new Audio("/lose.mp3");
+
+        clickSound.current.preload = "auto";
+        winSound.current.preload = "auto";
+        loseSound.current.preload = "auto";
     }, []);
 
-    const play = (s) => { if (!s) return; s.currentTime = 0; s.play(); };
     const play = (soundRef) => {
         if (!soundRef.current) return;
         soundRef.current.currentTime = 0;
