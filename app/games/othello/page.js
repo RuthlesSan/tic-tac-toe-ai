@@ -122,12 +122,18 @@ export default function Othello() {
         if (!moves.length) {
             const playerMoves = getValidMoves(b, "B");
 
-            // 🔥 BOTH stuck → end game
+            // 🔥 BOTH stuck → end
             if (playerMoves.length === 0) {
                 checkGameEnd(b);
-            } else {
-                setPlayerTurn(true);
+                return;
             }
+
+            // 🔥 AI skips → give turn to player
+            setPlayerTurn(true);
+
+            // 🔥 FORCE UI UPDATE (important)
+            setBoard([...b]);
+
             return;
         }
 
