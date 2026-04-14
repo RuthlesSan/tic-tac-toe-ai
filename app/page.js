@@ -53,7 +53,7 @@ export default function Home() {
 
       {/* Footer */}
       <p className="mt-12 text-gray-400 text-sm">
-        Built by Sanjay 🚀
+        Built by Sanjay & Team
       </p>
     </div>
   );
