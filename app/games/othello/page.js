@@ -71,6 +71,55 @@ export default function Othello() {
     };
 
     // 🤖 AI logic (difficulty based)
+    const evaluateBoard = (b) => {
+        const flat = b.flat();
+        return flat.filter(x => x === "W").length - flat.filter(x => x === "B").length;
+    };
+
+    const minimax = (b, depth, alpha, beta, isMax) => {
+        if (depth === 0) return evaluateBoard(b);
+
+        let moves = [];
+
+        for (let r = 0; r < SIZE; r++) {
+            for (let c = 0; c < SIZE; c++) {
+                if (isValidMove(b, r, c, isMax ? "W" : "B")) {
+                    moves.push([r, c]);
+                }
+            }
+        }
+
+        if (moves.length === 0) return evaluateBoard(b);
+
+        if (isMax) {
+            let maxEval = -Infinity;
+
+            for (let m of moves) {
+                let newB = makeMove(b, m[0], m[1], "W");
+                let evalScore = minimax(newB, depth - 1, alpha, beta, false);
+
+                maxEval = Math.max(maxEval, evalScore);
+                alpha = Math.max(alpha, evalScore);
+                if (beta <= alpha) break;
+            }
+
+            return maxEval;
+        } else {
+            let minEval = Infinity;
+
+            for (let m of moves) {
+                let newB = makeMove(b, m[0], m[1], "B");
+                let evalScore = minimax(newB, depth - 1, alpha, beta, true);
+
+                minEval = Math.min(minEval, evalScore);
+                beta = Math.min(beta, evalScore);
+                if (beta <= alpha) break;
+            }
+
+            return minEval;
+        }
+    };
+
     const aiMove = (b) => {
         let moves = [];
 
@@ -85,25 +134,26 @@ export default function Othello() {
         let move;
 
         if (difficulty === "easy") {
-            // weak → random
             move = moves[Math.floor(Math.random() * moves.length)];
         }
 
-        else if (difficulty === "medium") {
-            // mix
-            if (Math.random() < 0.5)
-                move = moves[Math.floor(Math.random() * moves.length)];
-            else
-                move = moves[0];
+        else if (difficulty === "medium" && Math.random() < 0.5) {
+            move = moves[Math.floor(Math.random() * moves.length)];
         }
 
         else {
-            // HARD → try best flip
-            move = moves.reduce((best, m) => {
-                const newB = makeMove(b, m[0], m[1], "W");
-                const score = newB.flat().filter(x => x === "W").length;
-                return score > best.score ? { move: m, score } : best;
-            }, { move: moves[0], score: 0 }).move;
+            let bestScore = -Infinity;
+            move = moves[0];
+
+            for (let m of moves) {
+                let newB = makeMove(b, m[0], m[1], "W");
+                let score = minimax(newB, 3, -Infinity, Infinity, false);
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = m;
+                }
+            }
         }
 
         const newBoard = makeMove(b, move[0], move[1], "W");
@@ -164,12 +214,12 @@ export default function Othello() {
                             key={level}
                             onClick={() => setDifficulty(level)}
                             className={`px-5 py-2 rounded font-bold transition ${difficulty === level
-                                    ? "bg-blue-600 scale-105"
-                                    : level === "easy"
-                                        ? "bg-green-500"
-                                        : level === "medium"
-                                            ? "bg-yellow-500"
-                                            : "bg-red-500"
+                                ? "bg-blue-600 scale-105"
+                                : level === "easy"
+                                    ? "bg-green-500"
+                                    : level === "medium"
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
                                 }`}
                         >
                             {level.charAt(0).toUpperCase() + level.slice(1)}
