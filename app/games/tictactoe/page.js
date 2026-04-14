@@ -225,8 +225,8 @@ export default function Home() {
         <button
           onClick={() => difficulty && setGameStarted(true)}
           className={`px-8 py-3 rounded-xl font-bold tracking-wide transition ${difficulty
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-gray-500 cursor-not-allowed"
+            ? "bg-blue-500 hover:bg-blue-600"
+            : "bg-gray-500 cursor-not-allowed"
             }`}
         >
           Start Game
@@ -255,14 +255,19 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="mt-4 flex gap-4">
-        <button onClick={nextRound} className="bg-yellow-500 px-4 py-2 rounded">Next</button>
-        <button onClick={resetGame} className="bg-green-500 px-4 py-2 rounded">Reset</button>
-        <button onClick={() => { resetGame(); setGameStarted(false); }}
-          className="bg-red-500 px-4 py-2 rounded">
-          Exit
-        </button>
-      </div>
+      {!matchWinner && (
+        <div className="mt-4 flex gap-4">
+          <button onClick={resetGame} className="bg-green-500 px-4 py-2 rounded">
+            Reset
+          </button>
+          <button
+            onClick={() => { resetGame(); setGameStarted(false); }}
+            className="bg-red-500 px-4 py-2 rounded"
+          >
+            Exit
+          </button>
+        </div>
+      )}
 
       {/* ROUND POPUP */}
       {showPopup && (
@@ -272,7 +277,7 @@ export default function Home() {
             <button
               onClick={() => {
                 setShowPopup(false);
-                nextRound();
+                if (!matchWinner) nextRound();
               }}
               className="bg-blue-500 px-5 py-2 rounded"
             >
@@ -299,9 +304,9 @@ export default function Home() {
                 resetGame();
                 setGameStarted(false);
               }}
-              className="bg-blue-500 px-4 py-2 rounded"
+              className="bg-red-500 px-4 py-2 rounded"
             >
-              Go Back
+              Exit
             </button>
           </div>
         </div>
