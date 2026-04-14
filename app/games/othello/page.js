@@ -217,7 +217,9 @@ export default function Othello() {
     }
     const handleClick = (r, c) => {
         if (!playerTurn || winner) return;
-        if (!isValidMove(board, r, c, "B")) return;
+
+        const isValid = validMoves.some(([vr, vc]) => vr === r && vc === c);
+        if (!isValid) return;
 
         play(clickSound);
 
