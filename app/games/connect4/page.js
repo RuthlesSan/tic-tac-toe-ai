@@ -189,6 +189,9 @@ export default function ConnectFour() {
         <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
 
             <h1 className="text-3xl mb-4">Connect Four</h1>
+            <div className="mb-4 text-lg">
+                Difficulty: <span className="uppercase font-semibold">{difficulty}</span>
+            </div>
 
             {/* Board */}
             <div className="grid grid-cols-7 gap-2 bg-blue-900 p-3 rounded-xl">
