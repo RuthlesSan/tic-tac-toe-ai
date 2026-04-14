@@ -149,21 +149,71 @@ export default function Gomoku() {
     };
 
     // 🔥 AI MOVE
+    const isWinningMove = (b, r, c, player) => {
+        for (let [dr, dc] of directions) {
+            let count = 1;
+
+            for (let i = 1; i < 5; i++) {
+                let nr = r + dr * i, nc = c + dc * i;
+                if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && b[nr][nc] === player)
+                    count++;
+                else break;
+            }
+
+            for (let i = 1; i < 5; i++) {
+                let nr = r - dr * i, nc = c - dc * i;
+                if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && b[nr][nc] === player)
+                    count++;
+                else break;
+            }
+
+            if (count >= 5) return true;
+        }
+        return false;
+    };
+    const findWinningMove = (b, player) => {
+        for (let r = 0; r < SIZE; r++) {
+            for (let c = 0; c < SIZE; c++) {
+                if (!b[r][c]) {
+                    const newB = b.map(row => [...row]);
+                    newB[r][c] = player;
+
+                    if (isWinningMove(newB, r, c, player)) {
+                        return [r, c];
+                    }
+                }
+            }
+        }
+        return null;
+    };
     const aiMove = (b) => {
         let move;
 
-        const moves = getMoves(b);
+        // 🔥 1. WIN if possible
+        const winMove = findWinningMove(b, "W");
+        if (winMove) move = winMove;
 
-        if (difficulty === "easy") {
-            move = moves[Math.floor(Math.random() * moves.length)];
-        }
-        else if (difficulty === "medium") {
-            move = Math.random() < 0.5
-                ? moves[Math.floor(Math.random() * moves.length)]
-                : bestMove(b, 2);
-        }
+        // 🔥 2. BLOCK player
         else {
-            move = bestMove(b, 3);
+            const blockMove = findWinningMove(b, "B");
+            if (blockMove) move = blockMove;
+        }
+
+        // 🔥 3. Difficulty logic
+        if (!move) {
+            const moves = getMoves(b);
+
+            if (difficulty === "easy") {
+                move = moves[Math.floor(Math.random() * moves.length)];
+            }
+            else if (difficulty === "medium") {
+                move = Math.random() < 0.5
+                    ? moves[Math.floor(Math.random() * moves.length)]
+                    : bestMove(b, 2);
+            }
+            else {
+                move = bestMove(b, 3);
+            }
         }
 
         const newB = b.map(row => [...row]);
@@ -239,12 +289,12 @@ export default function Gomoku() {
                         <button key={level}
                             onClick={() => setDifficulty(level)}
                             className={`px-5 py-2 rounded font-bold ${difficulty === level
-                                    ? "bg-blue-600 scale-105"
-                                    : level === "easy"
-                                        ? "bg-green-500"
-                                        : level === "medium"
-                                            ? "bg-yellow-500"
-                                            : "bg-red-500"
+                                ? "bg-blue-600 scale-105"
+                                : level === "easy"
+                                    ? "bg-green-500"
+                                    : level === "medium"
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
                                 }`}>
                             {level.charAt(0).toUpperCase() + level.slice(1)}
                         </button>
