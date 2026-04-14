@@ -118,9 +118,16 @@ export default function Othello() {
             }
         }
 
+        // ❌ No AI moves
         if (!moves.length) {
-            setPlayerTurn(true);
-            checkGameEnd(b);
+            const playerMoves = getValidMoves(b, "B");
+
+            // 🔥 BOTH stuck → end game
+            if (playerMoves.length === 0) {
+                checkGameEnd(b);
+            } else {
+                setPlayerTurn(true);
+            }
             return;
         }
 
@@ -149,9 +156,24 @@ export default function Othello() {
 
         const newBoard = makeMove(b, move[0], move[1], "W");
         setBoard(newBoard);
-        setPlayerTurn(true);
 
-        checkGameEnd(newBoard);
+        const playerMoves = getValidMoves(newBoard, "B");
+        const aiMoves = getValidMoves(newBoard, "W");
+
+        // 🔥 BOTH stuck → end
+        if (playerMoves.length === 0 && aiMoves.length === 0) {
+            checkGameEnd(newBoard);
+            return;
+        }
+
+        // 🔥 PLAYER cannot move → AI plays again
+        if (playerMoves.length === 0) {
+            setTimeout(() => aiMove(newBoard), 500);
+            return;
+        }
+
+        // ✅ Normal turn
+        setPlayerTurn(true);
     };
 
     const checkGameEnd = (b) => {
@@ -225,16 +247,25 @@ export default function Othello() {
 
         const newB = makeMove(board, r, c, "B");
         setBoard(newB);
-        setPlayerTurn(false);
 
         const aiMoves = getValidMoves(newB, "W");
+        const playerMoves = getValidMoves(newB, "B");
 
+        // 🔥 CASE 1: Both cannot move → END GAME
+        if (aiMoves.length === 0 && playerMoves.length === 0) {
+            checkGameEnd(newB);
+            return;
+        }
+
+        // CASE 2: AI cannot move → skip
         if (aiMoves.length === 0) {
             setPlayerTurn(true);
-            checkGameEnd(newB);
-        } else {
-            setTimeout(() => aiMove(newB), 500);
+            return;
         }
+
+        // CASE 3: AI plays
+        setPlayerTurn(false);
+        setTimeout(() => aiMove(newB), 500);
     };
 
     const resetGame = () => {
