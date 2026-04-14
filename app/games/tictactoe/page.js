@@ -235,7 +235,7 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
       <h1 className="text-3xl mb-2">Round {round}</h1>
-      <p>Difficulty: {difficulty}</p>
+      <p>Difficulty: {difficulty.toUpperCase()}</p>
       <p>You: {playerScore} | AI: {aiScore}</p>
 
       <div className="grid grid-cols-3 gap-3 mt-4">
