@@ -233,12 +233,24 @@ export default function ConnectFour() {
                 </div>
             )}
 
-            <button
-                onClick={resetGame}
-                className="mt-6 bg-yellow-500 px-4 py-2 rounded"
-            >
-                Reset
-            </button>
+            <div className="mt-6 flex gap-4">
+                <button
+                    onClick={resetGame}
+                    className="bg-yellow-500 px-5 py-2 rounded hover:bg-yellow-600 transition font-bold"
+                >
+                    Reset
+                </button>
+
+                <button
+                    onClick={() => {
+                        resetGame();
+                        setGameStarted(false);
+                    }}
+                    className="bg-red-500 px-5 py-2 rounded hover:bg-red-600 transition font-bold"
+                >
+                    Exit
+                </button>
+            </div>
         </div>
     );
 }
