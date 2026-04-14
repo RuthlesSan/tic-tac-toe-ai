@@ -223,8 +223,11 @@ export default function Home() {
         </div>
 
         <button
-          onClick={() => setGameStarted(true)}
-          className="px-8 py-3 bg-blue-500 rounded-xl hover:bg-blue-600 transition font-bold tracking-wide"
+          onClick={() => difficulty && setGameStarted(true)}
+          className={`px-8 py-3 rounded-xl font-bold tracking-wide transition ${difficulty
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-gray-500 cursor-not-allowed"
+            }`}
         >
           Start Game
         </button>
