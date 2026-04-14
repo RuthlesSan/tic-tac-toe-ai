@@ -98,7 +98,7 @@ export default function ConnectFour() {
     };
 
     const handleClick = (col) => {
-        if (winner) return;
+        if (winner || !gameStarted) return;
 
         playSound(clickSound);
 
@@ -116,10 +116,19 @@ export default function ConnectFour() {
 
         setTimeout(() => {
             const aiCol = getAIMove(newBoard);
-            newBoard = dropPiece(newBoard, aiCol, "O");
-            setBoard(newBoard);
 
-            const aiWin = checkWinner(newBoard);
+            let updatedBoard = newBoard.map(r => [...r]);
+
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (!updatedBoard[r][aiCol]) {
+                    updatedBoard[r][aiCol] = "O";
+                    break;
+                }
+            }
+
+            setBoard(updatedBoard);
+
+            const aiWin = checkWinner(updatedBoard);
             if (aiWin) {
                 playSound(loseSound);
                 setPopupMessage("🤖 AI Wins!");
@@ -152,7 +161,14 @@ export default function ConnectFour() {
                         <button
                             key={level}
                             onClick={() => setDifficulty(level)}
-                            className="px-5 py-2 rounded font-bold tracking-wide bg-blue-500"
+                            className={`px-5 py-2 rounded font-bold tracking-wide transition ${difficulty === level
+                                ? "bg-blue-600 scale-105"
+                                : level === "easy"
+                                    ? "bg-green-500 hover:bg-green-600"
+                                    : level === "medium"
+                                        ? "bg-yellow-500 hover:bg-yellow-600"
+                                        : "bg-red-500 hover:bg-red-600"
+                                }`}
                         >
                             {level.charAt(0).toUpperCase() + level.slice(1)}
                         </button>
