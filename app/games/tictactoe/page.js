@@ -227,12 +227,7 @@ export default function Home() {
             Start Game
           </button>
 
-          <button
-            onClick={()=>router.push("/")}
-            className="px-6 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold"
-          >
-            Main Menu
-          </button>
+          
         </div>
       </div>
     );
