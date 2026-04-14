@@ -178,11 +178,13 @@ export default function Othello() {
 
     const checkGameEnd = (b) => {
         const playerMoves = getValidMoves(b, "B");
-
         const aiMoves = getValidMoves(b, "W");
 
-        if (playerMoves.length === 0 && aiMoves.length === 0) {
-            const flat = b.flat();
+        const flat = b.flat();
+        const isBoardFull = !flat.includes(null);
+
+        // 🔥 END CONDITIONS
+        if (isBoardFull || (playerMoves.length === 0 && aiMoves.length === 0)) {
             const B = flat.filter(x => x === "B").length;
             const W = flat.filter(x => x === "W").length;
 
