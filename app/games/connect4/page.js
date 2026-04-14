@@ -227,33 +227,38 @@ export default function ConnectFour() {
                         </button>
 
                         <button
-                            onClick={() => router.push("/")}
-                            className="bg-blue-500 px-4 py-2 rounded"
+                            onClick={() => {
+                                resetGame();
+                                setGameStarted(false);
+                            }}
+                            className="bg-red-500 px-4 py-2 rounded"
                         >
-                            Go Back
+                            Exit
                         </button>
                     </div>
                 </div>
             )}
 
-            <div className="mt-6 flex gap-4">
-                <button
-                    onClick={resetGame}
-                    className="bg-yellow-500 px-5 py-2 rounded hover:bg-yellow-600 transition font-bold"
-                >
-                    Reset
-                </button>
+            {!winner && (
+                <div className="mt-6 flex gap-4">
+                    <button
+                        onClick={resetGame}
+                        className="bg-yellow-500 px-5 py-2 rounded hover:bg-yellow-600 transition font-bold"
+                    >
+                        Reset
+                    </button>
 
-                <button
-                    onClick={() => {
-                        resetGame();
-                        setGameStarted(false);
-                    }}
-                    className="bg-red-500 px-5 py-2 rounded hover:bg-red-600 transition font-bold"
-                >
-                    Exit
-                </button>
-            </div>
+                    <button
+                        onClick={() => {
+                            resetGame();
+                            setGameStarted(false);
+                        }}
+                        className="bg-red-500 px-5 py-2 rounded hover:bg-red-600 transition font-bold"
+                    >
+                        Exit
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
