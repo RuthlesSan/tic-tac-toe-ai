@@ -179,26 +179,40 @@ export default function Othello() {
         const opponent = player === "B" ? "W" : "B";
         const moves = [];
 
-        const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0], [1, 1], [1, -1], [-1, 1], [-1, -1]];
-
-        for (let r = 0; r < 8; r++) {
-            for (let c = 0; c < 8; c++) {
+        for (let r = 0; r < SIZE; r++) {
+            for (let c = 0; c < SIZE; c++) {
                 if (board[r][c]) continue;
 
-                for (let [dr, dc] of dirs) {
-                    let i = r + dr, j = c + dc, found = false;
+                let valid = false;
 
-                    while (i >= 0 && i < 8 && j >= 0 && j < 8) {
-                        if (board[i][j] === opponent) found = true;
+                for (let [dr, dc] of directions) {
+                    let i = r + dr;
+                    let j = c + dc;
+                    let hasOpponentBetween = false;
+
+                    while (i >= 0 && i < SIZE && j >= 0 && j < SIZE) {
+                        if (board[i][j] === opponent) {
+                            hasOpponentBetween = true;
+                        }
                         else if (board[i][j] === player) {
-                            if (found) moves.push([r, c]);
+                            if (hasOpponentBetween) {
+                                valid = true;
+                            }
                             break;
-                        } else break;
-                        i += dr; j += dc;
+                        }
+                        else break;
+
+                        i += dr;
+                        j += dc;
                     }
+
+                    if (valid) break;
                 }
+
+                if (valid) moves.push([r, c]);
             }
         }
+
         return moves;
     }
     const handleClick = (r, c) => {
@@ -230,7 +244,7 @@ export default function Othello() {
     // 🎮 START SCREEN
     const validMoves = getValidMoves(board, "B");
     if (!gameStarted) {
-        
+
         return (
             <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
                 <h1 className="text-5xl mb-6 font-bold">Othello</h1>
@@ -283,7 +297,7 @@ export default function Othello() {
                 {board.map((row, r) =>
                     row.map((cell, c) => {
                         const isValid = validMoves.some(([vr, vc]) => vr === r && vc === c);
-                    
+
                         return (
                             <div key={r + "-" + c}
                                 onClick={() => handleClick(r, c)}
@@ -294,7 +308,7 @@ export default function Othello() {
                                 {cell === "W" && <div className="w-6 h-6 bg-white rounded-full" />}
 
                                 {/* 🔥 VALID MOVE DOT */}
-                                {!cell && isValid && (
+                                {!cell && isValid && playerTurn && (
                                     <div className="w-2 h-2 bg-red-500 rounded-full opacity-80"></div>
                                 )}
                             </div>
