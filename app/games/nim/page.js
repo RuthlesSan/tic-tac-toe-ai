@@ -108,12 +108,12 @@ export default function Nim() {
                             key={level}
                             onClick={() => setDifficulty(level)}
                             className={`px-5 py-2 rounded font-bold ${difficulty === level
-                                    ? "bg-blue-600 scale-105"
-                                    : level === "easy"
-                                        ? "bg-green-500"
-                                        : level === "medium"
-                                            ? "bg-yellow-500"
-                                            : "bg-red-500"
+                                ? "bg-blue-600 scale-105"
+                                : level === "easy"
+                                    ? "bg-green-500"
+                                    : level === "medium"
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
                                 }`}
                         >
                             {level.toUpperCase()}
@@ -141,11 +141,30 @@ export default function Nim() {
                 Turn: {playerTurn ? "You" : "AI"}
             </p>
 
-            {/* 🔥 STICKS VISUAL */}
-            <div className="flex flex-wrap justify-center max-w-md mb-6">
-                {Array(sticks).fill(0).map((_, i) => (
-                    <div key={i} className="w-2 h-10 bg-yellow-400 m-1 rounded"></div>
-                ))}
+            {/* 🔥 PYRAMID STICKS */}
+            <div className="mb-6">
+                {Array.from({ length: 6 }, (_, row) => {
+                    const totalBefore = (row * (row + 1)) / 2;
+                    const rowCount = row + 1;
+
+                    return (
+                        <div key={row} className="flex justify-center">
+                            {Array.from({ length: rowCount }, (_, col) => {
+                                const index = totalBefore + col;
+
+                                // show stick only if still remaining
+                                if (index >= sticks) return null;
+
+                                return (
+                                    <div
+                                        key={col}
+                                        className="w-2 h-10 bg-yellow-400 m-1 rounded transition-all duration-300"
+                                    />
+                                );
+                            })}
+                        </div>
+                    );
+                })}
             </div>
 
             {/* 🎮 CONTROLS */}
@@ -183,15 +202,28 @@ export default function Nim() {
                 <div className="fixed inset-0 flex items-center justify-center bg-black/60">
                     <div className="bg-gray-900 p-6 rounded-xl text-center">
                         <h2 className="text-xl mb-4">{popupMessage}</h2>
-                        <button
-                            onClick={() => {
-                                setShowPopup(false);
-                                resetGame();
-                            }}
-                            className="bg-blue-500 px-5 py-2 rounded"
-                        >
-                            Play Again
-                        </button>
+
+                        <div className="flex gap-4 justify-center">
+                            <button
+                                onClick={() => {
+                                    setShowPopup(false);
+                                    resetGame();
+                                }}
+                                className="bg-blue-500 px-5 py-2 rounded"
+                            >
+                                Play Again
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    resetGame();
+                                    setGameStarted(false);
+                                }}
+                                className="bg-red-500 px-5 py-2 rounded"
+                            >
+                                Exit
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
