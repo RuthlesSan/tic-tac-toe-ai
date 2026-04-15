@@ -30,31 +30,36 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-black text-white flex flex-col">
 
-      {/* 🌈 Title */}
-      <h1 className="text-5xl md:text-6xl font-extrabold mb-12 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-        Minimax AI Games Arena
-      </h1>
 
-      {/* 🎮 TOP ROW (3 GAMES) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
-        {games.slice(0, 3).map((game, i) => (
-          <GameCard key={i} game={game} />
-        ))}
+      {/* 🎯 CONTENT */}
+      <div className="flex flex-col items-center justify-center flex-1 px-6">
+
+        {/* 🌈 Title */}
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-12 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
+          Minimax AI Games Arena
+        </h1>
+
+        {/* 🎮 TOP ROW */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8">
+          {games.slice(0, 3).map((game, i) => (
+            <GameCard key={i} game={game} />
+          ))}
+        </div>
+
+        {/* 🎮 BOTTOM ROW */}
+        <div className="flex justify-center gap-8">
+          {games.slice(3, 5).map((game, i) => (
+            <GameCard key={i} game={game} />
+          ))}
+        </div>
+
+        {/* Footer */}
+        <p className="mt-12 text-gray-400 text-sm">
+          Built by Sanjay & Team
+        </p>
+
       </div>
-
-      {/* 🎮 BOTTOM ROW (CENTERED 2 GAMES) */}
-      <div className="flex justify-center gap-8">
-        {games.slice(3, 5).map((game, i) => (
-          <GameCard key={i} game={game} />
-        ))}
-      </div>
-
-      {/* Footer */}
-      <p className="mt-12 text-gray-400 text-sm">
-        Built by Sanjay & Team
-      </p>
     </div>
   );
-}
