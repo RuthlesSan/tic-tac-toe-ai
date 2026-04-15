@@ -4,7 +4,7 @@ import { useState } from "react";
 const START_STICKS = 21;
 
 export default function Nim() {
-
+    const [aiMoveMsg, setAiMoveMsg] = useState("");
     const [sticks, setSticks] = useState(START_STICKS);
     const [gameStarted, setGameStarted] = useState(false);
     const [difficulty, setDifficulty] = useState(null);
@@ -46,6 +46,7 @@ export default function Nim() {
     };
 
     const handlePlayerMove = (take) => {
+        setAiMoveMsg("");
         if (!playerTurn || winner) return;
         if (take > sticks) return;
 
@@ -70,6 +71,9 @@ export default function Nim() {
             let aiTake = getAIMove(newSticks);
             if (aiTake > newSticks) aiTake = 1;
 
+            // 🔥 SHOW AI MOVE
+            setAiMoveMsg(`🤖 AI took ${aiTake} stick${aiTake > 1 ? "s" : ""}`);
+
             let afterAI = newSticks - aiTake;
             setSticks(afterAI);
 
@@ -87,6 +91,7 @@ export default function Nim() {
     };
 
     const resetGame = () => {
+        setAiMoveMsg("");
         setSticks(START_STICKS);
         setWinner(null);
         setPlayerTurn(true);
@@ -137,9 +142,15 @@ export default function Nim() {
 
             <h1 className="text-3xl mb-2">NIM Game</h1>
             <p className="mb-2">Remaining Sticks: {sticks}</p>
-            <p className="mb-4">
+            <p className="mb-2">
                 Turn: {playerTurn ? "You" : "AI"}
             </p>
+
+            {!playerTurn && !winner && (
+                <p className="mb-4 text-yellow-400 font-semibold">
+                    {aiMoveMsg}
+                </p>
+            )}
 
             {/* 🔥 PYRAMID STICKS */}
             <div className="mb-6">
@@ -174,7 +185,9 @@ export default function Nim() {
                         <button
                             key={n}
                             onClick={() => handlePlayerMove(n)}
-                            className="bg-blue-500 px-5 py-2 rounded font-bold"
+                            className={`px-5 py-2 rounded font-bold ${n > sticks ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500"
+                                }`}
+                            disabled={n > sticks}
                         >
                             Take {n}
                         </button>
