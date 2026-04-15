@@ -91,6 +91,7 @@ export default function Nim() {
     };
 
     const resetGame = () => {
+        setShowPopup(false);
         setAiMoveMsg("");
         setSticks(START_STICKS);
         setWinner(null);
