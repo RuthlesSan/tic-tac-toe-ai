@@ -191,40 +191,32 @@ export default function Home() {
   // 🎮 START SCREEN
   if (!gameStarted) {
     return (
-      return (
-      <div className="bg-black min-h-screen text-white">
+      <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
+        <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe</h1>
 
+        <p className="mb-3">
+          {difficulty ? `Difficulty: ${difficulty.toUpperCase()}` : "Select Difficulty:"}
+        </p>
 
-        {/* your existing content */}
-      </div>
-    );
-    <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-      <h1 className="text-5xl mb-6 font-bold">Tic Tac Toe</h1>
-
-      <p className="mb-3">
-        {difficulty ? `Difficulty: ${difficulty.toUpperCase()}` : "Select Difficulty:"}
-      </p>
-
-      <div className="flex gap-4 mb-6">
-        {["easy", "medium", "hard"].map(level => (
-          <button
-            key={level}
-            onClick={() => setDifficulty(level)}
-            className={`px-5 py-2 rounded font-bold ${difficulty === level
+        <div className="flex gap-4 mb-6">
+          {["easy", "medium", "hard"].map(level => (
+            <button
+              key={level}
+              onClick={() => setDifficulty(level)}
+              className={`px-5 py-2 rounded font-bold ${difficulty === level
                 ? "bg-blue-600 scale-105"
                 : level === "easy"
                   ? "bg-green-500"
                   : level === "medium"
                     ? "bg-yellow-500"
                     : "bg-red-500"
-              }`}
-          >
-            {level.charAt(0).toUpperCase() + level.slice(1)}
-          </button>
-        ))}
-      </div>
+                }`}
+            >
+              {level.charAt(0).toUpperCase() + level.slice(1)}
+            </button>
+          ))}
+        </div>
 
-      <div className="flex flex-col gap-3 items-center">
         <button
           onClick={() => difficulty && setGameStarted(true)}
           className={`px-8 py-3 rounded-xl font-bold ${difficulty ? "bg-blue-500" : "bg-gray-500 cursor-not-allowed"
@@ -232,12 +224,11 @@ export default function Home() {
         >
           Start Game
         </button>
-
-
       </div>
-    </div>
     );
   }
+
+
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
