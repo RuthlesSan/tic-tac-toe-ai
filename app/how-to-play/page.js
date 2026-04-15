@@ -1,9 +1,9 @@
-import Navbar from "@/components/Navbar";
+
 
 export default function HowToPlay() {
   return (
     <div className="bg-black min-h-screen text-white">
-      <Navbar />
+      
 
       <div className="p-10 max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">How to Play 🎮</h1>
