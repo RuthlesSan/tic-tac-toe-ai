@@ -11,7 +11,7 @@ export default function Feedback() {
         <p className="mb-6">We'd love your feedback!</p>
 
         <a
-          href="https://forms.gle/YOUR_GOOGLE_FORM_LINK"
+          href="https://docs.google.com/forms/d/e/1FAIpQLScCFIXbqEPL1hNje29bawEXzKnDG4Hebq3K6Kwf4-rOTt6sdA/viewform?usp=publish-editor"
           target="_blank"
           className="bg-blue-500 px-6 py-3 rounded-xl font-bold"
         >
